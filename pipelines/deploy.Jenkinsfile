@@ -3,6 +3,7 @@ pipeline {
         label 'general'
     }
 
+
     parameters {
         string(name: 'SERVICE_NAME', defaultValue: '', description: '')
         string(name: 'IMAGE_FULL_NAME_PARAM', defaultValue: '', description: '')
