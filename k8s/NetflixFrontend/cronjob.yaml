@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: availability-job
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: availability-job
+            image: curlimages/curl
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - |
+              status_code=$(curl -o /dev/null -s -w "%{http_code}\n" http://netflix-frontend-service:3000)
+              if [ "$status_code" -ne 200 ]; then
+                echo "NetflixFrontend check failed with status code $status_code"
+              fi
+          restartPolicy: OnFailure
