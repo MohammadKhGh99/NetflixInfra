@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'general'
+    }
 
     parameters {
         string(name: 'SERVICE_NAME', defaultValue: '', description: '')
@@ -10,7 +12,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 /*
-
                 Now your turn! implement the pipeline steps ...
 
                 - `cd` into the directory corresponding to the SERVICE_NAME variable.
@@ -20,14 +21,13 @@ pipeline {
                    * Setting global Git user.name and user.email in 'Manage Jenkins > System' is recommended.
                    * Setting Shell executable to `/bin/bash` in 'Manage Jenkins > System' is recommended.
                 */
-            }
-        }
-        stage('Trigger Deploy') {
-            steps {
-                build job: 'NetflixFrontendDeploy', wait: false, parameters: [
-                    string(name: 'SERVICE_NAME', value: "NetflixFrontend")
-                    string(name: 'IMAGE_FULL_NAME_PARAM', value: "$IMAGE_FULL_NAME")
-                ]
+                sh '''
+                   cd "${params.SERVICE_NAME}"
+                   yq w -i deployment.yaml spec.template.spec.containers[0].image "${params.IMAGE_FULL_NAME_PARAM}"
+                   git add deployment.yaml
+                   git commit -m "Update image tag to ${params.IMAGE_FULL_NAME_PARAM}"
+                   git push origin main
+                '''
             }
         }
     }
