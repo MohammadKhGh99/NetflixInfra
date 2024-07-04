@@ -23,7 +23,7 @@ pipeline {
                 */
                 sh '''
                    cd k8s/$SERVICE_NAME
-                   sed -i 's|image: .*|image: $IMAGE_FULL_NAME_PARAM|' deployment.yaml
+                   sed -i 's|image: .*|image: ${IMAGE_FULL_NAME_PARAM}|' deployment.yaml
                 '''
                 withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh """
