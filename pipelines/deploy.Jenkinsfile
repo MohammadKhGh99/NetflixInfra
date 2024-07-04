@@ -21,10 +21,10 @@ pipeline {
                    * Setting global Git user.name and user.email in 'Manage Jenkins > System' is recommended.
                    * Setting Shell executable to `/bin/bash` in 'Manage Jenkins > System' is recommended.
                 */
-                sh '''
+                sh """
                    cd k8s/$SERVICE_NAME
                    sed -i 's|image: .*|image: ${IMAGE_FULL_NAME_PARAM}|' deployment.yaml
-                '''
+                """
                 withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh """
                         cd k8s/${SERVICE_NAME}
