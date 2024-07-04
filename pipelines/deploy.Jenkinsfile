@@ -23,12 +23,19 @@ pipeline {
                 */
                 sh '''
                    cd k8s/$SERVICE_NAME
-                   git checkout main
+
                    sed -i 's|image: .*|image: ${IMAGE_FULL_NAME_PARAM}|' deployment.yaml
-                   git add deployment.yaml
-                   git commit -m "Update image tag to $IMAGE_FULL_NAME_PARAM"
-                   git push origin main
+
                 '''
+                withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    sh """
+                        git config --global user.name "MohammadKhGh99"
+                        git config --global user.email "mohammad.gh454@gmail.com"
+                        git add deployment.yaml
+                        git commit -m 'Update image to ${IMAGE_FULL_NAME_PARAM}'
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/MohammadKhGh99/NetflixInfra.git HEAD:main
+                    """
+                }
             }
         }
     }
