@@ -23,6 +23,7 @@ pipeline {
                 */
                 sh '''
                    cd k8s/$SERVICE_NAME
+                   sudo apt install yq
                    yq w -i deployment.yaml spec.template.spec.containers[0].image $IMAGE_FULL_NAME_PARAM
                    git add deployment.yaml
                    git commit -m "Update image tag to $IMAGE_FULL_NAME_PARAM
