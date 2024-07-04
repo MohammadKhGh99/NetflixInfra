@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: mohammadgh99/netflix_movie_catalog:0.0.1
+        image: mohammadgh99/netflix_movie_catalog:0.0.2
         ports:
           - containerPort: 8080
         readinessProbe:
